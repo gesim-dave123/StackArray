@@ -1,0 +1,203 @@
+import java.util.*;
+import java.util.Scanner;
+import javax.swing.*;
+
+public class Main
+{
+
+ public static void main(String args[])
+    {
+    Scanner in = new Scanner(System.in);
+            // We pass Uppercase Infix
+            String infixExpression =JOptionPane.showInputDialog(null,"Input infix Expression");
+            System.out.println("The Infix Expression is: "+infixExpression);
+            String result = convertToPostfix(infixExpression);
+            
+            JOptionPane.showMessageDialog(null,"The Postfix of the given Infix Expression is: "+result);
+            // "((a+(b*c))-d)"
+            System.out.println();
+    }
+
+
+    public static int precedence(char ch)
+    {
+        if(ch=='+' || ch=='-')
+            return 1;
+
+        else if(ch=='*' || ch=='/')
+            return 2;                       // * and / divide have higher precedence.
+
+        return 0;
+    }
+    public static String convertToPostfix(String exp)
+    {
+        StackNode operators = new StackNode();
+        String result = "";
+
+        for(int i=0;i < exp.length();i++) 
+        { 
+            char ch=exp.charAt(i); // current character.
+            
+            if(ch=='(') 
+                operators.push(ch);            
+            else if((ch>='a' && ch<='z') || (ch>='A' && ch<='Z')||(ch > '0'&&ch< '9')) 
+                result+=ch+""; 
+            else if(ch==')') 
+            { 
+                while(operators.peek().toString().charAt(0)!='(') 
+                { // STEP 5 of Algorithm.
+                    Object op = operators.pop();
+                                      
+                    result+=op;
+                } 
+                operators.pop(); // pop '(' from stack. 
+            }
+            else if(ch=='+' || ch=='-' || ch== '*' || ch== '/') 
+            { // check precedence of each operator with top of the stack and process them.
+                while(!operators.isEmpty() && operators.peek().toString()!="(" && precedence(ch) <= precedence(operators.peek().toString().charAt(0))) 
+                {
+                    Object op = operators.pop();
+                    result+=op;
+                     
+                                     
+                
+                } 
+                operators.push(ch);                 
+            } 
+            
+        } // If the operator stack still has some elements in it process them too Repeat Step 5. 
+        while(!operators.isEmpty())
+            {
+                Object op = operators.pop();               
+               result+=op;
+            }
+
+            return result;         // return resultant Postfix.
+        }   }
+ class MyNode 
+{
+   Object item;
+   MyNode next;
+}  
+    
+   class StackNode 
+    {
+   MyNode top;
+   
+   public StackNode()
+   {
+      top = null;
+   }
+   
+   public boolean isEmpty()
+   {
+      return top == null;
+   }
+   public int getCount()
+   {
+   if(!isEmpty())
+   {
+      int count =0;
+      MyNode temptop =top;
+      while(temptop.next!=null){
+         count++; 
+         temptop=temptop.next;          
+      }
+      return count;
+      }
+       return -1;
+   }
+   
+   public boolean isFull()
+   {
+      return false;
+   }        
+   public boolean push(Object o)
+   {
+      MyNode newNode= new MyNode();
+      newNode.item=o;
+      if(isEmpty())
+      {
+         top=newNode;
+      }else{
+            MyNode tempTop=top;
+            while(tempTop.next!=null){
+               tempTop =tempTop.next;
+            }
+            tempTop.next = newNode;      
+            }
+            return true;    
+   }
+   
+    public Object peek()
+    {
+      if(!isEmpty()){
+      
+         if(top.next==null){
+         return top.item;
+         
+         }else{
+          MyNode tempTop =top;
+          while(tempTop.next!=null){
+          tempTop =tempTop.next;
+          }
+          return tempTop.item;     
+         }
+            
+      }
+      return null;   
+    } 
+  public Object pop()
+    {
+     if(!isEmpty())
+     {
+       if(top.next==null){
+         top=null;       
+       }else
+       {
+         MyNode tempTop = top;
+         MyNode tempPrevious =null;
+         while(tempTop.next!=null)
+         {
+            tempPrevious=tempTop;
+            tempTop=tempTop.next; 
+         }
+         tempPrevious.next=null;
+         return tempTop.item;  
+       }
+        
+     }
+     return null;  
+    } 
+   
+   public String Display() {
+    String result = "";
+    
+    if (!isEmpty()) { 
+        if (top.next == null) {  
+            result += "[" + top.item + "]\n";
+            return result;
+        } else {
+            MyNode tempTop = top;
+            while (tempTop.next != null) {
+                tempTop = tempTop.next;
+            }
+
+            MyNode tempPrevious = tempTop;
+            result += "[" + tempTop.item + "]\n";        
+            tempTop = top;
+            while (tempPrevious != top) {
+                tempTop = top;
+                while (tempTop.next != tempPrevious) { 
+                    tempTop = tempTop.next;            
+                }
+                result += "[" + tempTop.item + "]\n";
+                tempPrevious = tempTop;
+            }
+            return result;
+        }
+    }
+    return "";
+}
+
+}
