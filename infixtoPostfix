@@ -2,21 +2,37 @@ import java.util.*;
 import java.util.Scanner;
 import javax.swing.*;
 
-public class Main
-{
+class Main {
+    public static void main(String[] args) {
+        boolean Continue = true;
 
- public static void main(String args[])
-    {
-    Scanner in = new Scanner(System.in);
-            // We pass Uppercase Infix
+        while (Continue) {
+            String input = JOptionPane.showInputDialog(null, "Infix To PostFix\nMenu:\n1. Create\n0. Exit\nInput");
+
+            if (input == null) {
+                JOptionPane.showMessageDialog(null, "You cancelled the operation. Exiting program.");
+                break;
+            }
+
+            switch (input) {
+                case "1":
+                    Create();
+                    break;
+                case "0":
+                    JOptionPane.showMessageDialog(null, "Closing the program");
+                    Continue = false;
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Invalid Input");
+            }
+        }
+    } 
+    public static void Create(){
             String infixExpression =JOptionPane.showInputDialog(null,"Input infix Expression");
-            System.out.println("The Infix Expression is: "+infixExpression);
-            String result = convertToPostfix(infixExpression);
-            
+            String result = convertToPostfix(infixExpression);            
             JOptionPane.showMessageDialog(null,"The Postfix of the given Infix Expression is: "+result);
-            // "((a+(b*c))-d)"
-            System.out.println();
-    }
+                
+    }   
 
 
     public static int precedence(char ch)
@@ -73,7 +89,9 @@ public class Main
             }
 
             return result;         // return resultant Postfix.
-        }   }
+        } 
+        
+      }
  class MyNode 
 {
    Object item;
@@ -152,7 +170,9 @@ public class Main
      if(!isEmpty())
      {
        if(top.next==null){
-         top=null;       
+         Object item = top.item;
+         top=null; 
+         return item;      
        }else
        {
          MyNode tempTop = top;
